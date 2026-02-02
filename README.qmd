@@ -1,0 +1,2 @@
+2026-01-29 es para la primera práctica pero no se hizo el alineamiento
+2026-02-02 la 2ª práctica de git
