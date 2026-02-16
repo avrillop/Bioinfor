@@ -1,2 +1,4 @@
-2026-01-29 es para la primera práctica pero no se hizo el alineamiento
+2026-01-29 es para la primera práctica pero no se hizo el alineamiento, tengo que hacerlo
 2026-02-02 la 2ª práctica de git
+2026-10-02 control calidad secuenciación por ilumina y falta el mapeo
+2026-16-02 Procesamiento de datos en R, he llegado a hacer las tablas y seleccionar un genoma en base a esta sy gráficas.
