@@ -2,3 +2,4 @@
 2026-02-02 la 2ª práctica de git
 2026-10-02 control calidad secuenciación por ilumina y falta el mapeo
 2026-16-02 Procesamiento de datos en R, he llegado a hacer las tablas y seleccionar un genoma en base a esta sy gráficas.
+2026-24-02 Uso de R para programar busquedas en ENA y análisis de estas tablas.
