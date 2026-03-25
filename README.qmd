@@ -5,3 +5,4 @@
 2026-24-02 Uso de R para programar busquedas en ENA y análisis de estas tablas.
 2026-03-03 práctica de listas a partir de base de datos y búsquedas
 2026-09-03 prácticas de hacer representaciones de gráficas a partir de datos.
+2026-25-03 práctica de blast y sus comandos
