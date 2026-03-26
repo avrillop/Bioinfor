@@ -6,3 +6,4 @@
 2026-03-03 práctica de listas a partir de base de datos y búsquedas
 2026-09-03 prácticas de hacer representaciones de gráficas a partir de datos.
 2026-25-03 práctica de blast y sus comandos
+2026-26-03 práctica de alinamiento y foilogenia de árboles
