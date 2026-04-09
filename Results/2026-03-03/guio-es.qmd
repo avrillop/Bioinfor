@@ -13,6 +13,7 @@ language:
 format:
    html:
       embed-resources: true
+      self-contained: true
 ---
 
 # Preparación

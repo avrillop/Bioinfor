@@ -6,13 +6,14 @@ execute:
   output: true
   error: true
 engine: knitr
-bibliography: ../../references.bib
+bibliography: ../../Documentos/references.bib
 language:
    title-block-published: "Última actualización:"
    section-title-references: "Bibliografía"
 format:
    html:
       embed-resources: true
+      self-contained: true
 ---
 
 # Preparación

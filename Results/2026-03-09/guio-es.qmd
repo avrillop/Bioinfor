@@ -13,6 +13,7 @@ language:
 format:
    html:
       embed-resources: true
+      self-contained: true
 ---
 
 # Preparación
@@ -76,6 +77,7 @@ ggplot(data = gwas,
    geom_abline(intercept = 0, slope = 1, color = 'red')
 ```
 Beta/partido con el error aumenta acompaña el valor T estadístico. Dos vectores de valores son idénticos
+
 :::{.callout-note icon=false}
 ## Desafío
 Comprueba gráficamente las suposiciones siguientes. Esfuérzate por imaginar qué

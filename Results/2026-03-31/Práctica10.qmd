@@ -5,8 +5,8 @@ format:
   html:
     fig-width: 10
     fig-height: 10
+    embed-resources: true
 editor: visual
-
 ---
 
 # Introducción
@@ -14,6 +14,7 @@ editor: visual
 Aunque existen muy buenos programas para inferir filogenias fuera del entorno de R (es decir, para el terminal de Bash), utilizar las herramientas en R tiene la ventaja de poder representar los árboles, manipularlos y extraer información de ellos con toda la flexibilidad que permite un lenguaje de programación. Otros programas como RAxML o IQtree producirían los resultados en forma de archivos de texto con formato Newick o NEXUS. En R, los árboles serán objetos de clase phylo, que pueden también ser exportados como archivos de texto con formato Newick con la función write.tree() del paquete ape. Este paquete será cargado automáticamente cuando carguemos el paquete phangorn, que proporciona las principales funciones para inferencia filogenética.
 
 # Objetivos
+
 Obtener una filogenia calibrada de homininos y algunos primates, a partir de secuencias mitocondriales.
 
 # Datos
@@ -25,15 +26,9 @@ mtdna <- read.phyDat('../../data/mtDNA.fasta', format = 'fasta')
 
 Después de ejecutar el bloque anterior, habrás cargado los datos en el objeto de clase phyDat llamado mtdna. Puedes usar la consola de R para echarle un vistazo, por ejemplo con la función glance() o incluso para generar una imagen del alineamiento con image(). Si tienes instalado el paquete Biostrings (de Bioconductor), puedes crear un objeto de classe DNAStringSet con as.StringSet(mtDNA), al que se le pueden aplicar muchas otras funciones. Pero no es necesario.
 
-Ejercicio
-¿Puedes confirmar el número de secuencias? Sí 42
-¿Qué longitud tiene el alineamiento? El total sale 697326/42=16.603
->library(ape)
->aln <- read.dna("../../data/mtDNA.fasta", format = "fasta")
->view(aln: nos muestra las secuencias ordenadas con el nt en cada secuenci)
+Ejercicio ¿Puedes confirmar el número de secuencias? Sí 42 ¿Qué longitud tiene el alineamiento? El total sale 697326/42=16.603 \>library(ape) \>aln \<- read.dna("../../data/mtDNA.fasta", format = "fasta") \>view(aln: nos muestra las secuencias ordenadas con el nt en cada secuenci)
 
-¿Qué función usarías para extraer los nombres de las secuencias?
->names(mtdna).
+¿Qué función usarías para extraer los nombres de las secuencias? \>names(mtdna).
 
 # Árboles basados en distancias
 
@@ -47,17 +42,7 @@ mt_nj    <- NJ(distancias)
 mt_upgma <- upgma(distancias)
 ```
 
-
-Ejercicio
-¿De qué clase son los objetos mt_nj y mt_upgma? Consulta la estructura de estos objetos (str(mt_nj)). Listas de características del árbol filogenético con las especies en que nodos se encientran y la distancia a los nodos.
-Estructura: fila de 4 con los nodos y la distancia de estos con la especie corespondiente.
-List of 4
- $ edge       : int [1:81, 1:2] 47 47 54 54 53 53 52 52 51 51 ...
- $ edge.length: num [1:81] 6.03e-05 5.20e-08 -4.37e-08 4.37e-08 8.51e-08 ...
- $ tip.label  : chr [1:42] "G.gorilla_D38114" "P.troglodytes_JF727212" "P.troglodytes_JN191207" "P.troglodytes_JF727168" ...
- $ Nnode      : int 40
- - attr(*, "class")= chr "phylo"
- - attr(*, "order")= chr "postorder"
+Ejercicio ¿De qué clase son los objetos mt_nj y mt_upgma? Consulta la estructura de estos objetos (str(mt_nj)). Listas de características del árbol filogenético con las especies en que nodos se encientran y la distancia a los nodos. Estructura: fila de 4 con los nodos y la distancia de estos con la especie corespondiente. List of 4 \$ edge : int \[1:81, 1:2\] 47 47 54 54 53 53 52 52 51 51 ... \$ edge.length: num \[1:81\] 6.03e-05 5.20e-08 -4.37e-08 4.37e-08 8.51e-08 ... \$ tip.label : chr \[1:42\] "G.gorilla_D38114" "P.troglodytes_JF727212" "P.troglodytes_JN191207" "P.troglodytes_JF727168" ... \$ Nnode : int 40 - attr(*, "class")= chr "phylo" - attr(*, "order")= chr "postorder"
 
 Represéntalos gráficamente (plot(mt_nj)) y consulta la ayuda de la función plot.phylo() para saber qué opciones de representación gráfica tienes.
 
@@ -67,29 +52,26 @@ Represéntalos gráficamente (plot(mt_nj)) y consulta la ayuda de la función pl
 plot(mt_nj)
 plot(mt_upgma)
 ```
+
 > help("plot.phylo")
-	
+
 a character string specifying the type of phylogeny to be drawn; it must be one of "phylogram" (the default), "cladogram", "fan", "unrooted", "radial", "tidy", or any unambiguous abbreviation of these.
 
-Para qué sirven las funciones add.scale.bar() y axisPhylo()?
-This function adds a horizontal bar giving the scale of the branch lengths to a plot of a phylogenetic tree on the current graphical device. Lo que hace es añadir una barra la longitud de cada rama.
-add.scale.bar(x, y, length = NULL, ask = FALSE,
-              lwd = 1, lcol = "black", ...)
-              
-axisPhylo(side = NULL, root.time = NULL, backward = TRUE, ...)
-This function adds a scaled axis on the side of a phylogeny plot. Eje relacion de tiempo con otro eje (root.time basado en el la raíz). Side es un valor en localizacion cada lugar y después backward es una funcion que da la vuelta al eje de tiempo para poner 0 en raiz.
+Para qué sirven las funciones add.scale.bar() y axisPhylo()? This function adds a horizontal bar giving the scale of the branch lengths to a plot of a phylogenetic tree on the current graphical device. Lo que hace es añadir una barra la longitud de cada rama. add.scale.bar(x, y, length = NULL, ask = FALSE, lwd = 1, lcol = "black", ...)
+
+axisPhylo(side = NULL, root.time = NULL, backward = TRUE, ...) This function adds a scaled axis on the side of a phylogeny plot. Eje relacion de tiempo con otro eje (root.time basado en el la raíz). Side es un valor en localizacion cada lugar y después backward es una funcion que da la vuelta al eje de tiempo para poner 0 en raiz.
 
 # Enraizar
 
 ## Escogiendo el nodo
+
 El árbol mt_nj no está enraizado (puedes comprobarlo con is.rooted()). Tenemos un par de opciones para enraizarlo. Una opción es root(), función en la que debemos especificar o bien el outgroup o bien el nodo interno en el que queremos situar la raíz. Para saber cómo identificar los nodos internos, puedes invocar nodelabels() después de haber usado plot(mt_nj). Por ejemplo, en mi caso, el nodo 75 parece ser el ancestro entre gorilas y chimpancés, y por tanto también es ancestro de los humanos. Por tanto:
 
 ```{r}
 mt_nj_rooted <- root(mt_nj, node = 75)
 ```
 
-##Con un outgroup
-La numeración de los nodos internos siempre sigue a la de las hojas (o puntas) del árbol. El orden es caprichoso y después de enraizar, lo que era el 75 en mt_nj ahora será el 43 en mt_nj_rooted. Para garantizar que el enraizado no depende de la numeración, es más seguro usar el nombre del outgroup:
+##Con un outgroup La numeración de los nodos internos siempre sigue a la de las hojas (o puntas) del árbol. El orden es caprichoso y después de enraizar, lo que era el 75 en mt_nj ahora será el 43 en mt_nj_rooted. Para garantizar que el enraizado no depende de la numeración, es más seguro usar el nombre del outgroup:
 
 ```{r}
 #| fig-width: 10
@@ -99,6 +81,7 @@ plot(mt_nj_rooted)
 ```
 
 ## En el punto medio
+
 Al representar el árbol enraizado (plot(mt_nj_rooted)) verás que no todas las hojas del árbol están a la misma altura. El punto exacto en el que se sitúa la raíz en una rama es arbitrario y root() no se esfuerza mucho en intentar que el árbol parezca ultramétrico. La otra opción es la función midpoint(), que escoge la posición de la raíz para que el árbol esté más equilibrado:
 
 ```{r}
@@ -111,11 +94,11 @@ nodelabels(frame = 'none')
 add.scale.bar()
 ```
 
-
 ## Con datación de hojas
+
 El enraizado en punto medio asume que todas las hojas son contemporáneas, como sucede en muchos casos. Pero, en nuestros datos tenemos secuencias contemporáneas y también arcaicas. En el apéndice encontrarás referencias sobre las edades estimadas de esas secuencias. Conociendo estas edades, podemos aplicar un método de enraizado llamado root-to-tip regression, mediante la función rtt() de ape.
 
-Lo primero es crear un vector de fechas (o edades) para todas las hojas del árbol. Podemos expressar las edades de las secuencias arcaicas como el número (negativo) de años que hace que dejaron de evolucionar. Para saber el orden en que debemos especificar las edades, podemos usar mt_nj$tip.label.
+Lo primero es crear un vector de fechas (o edades) para todas las hojas del árbol. Podemos expressar las edades de las secuencias arcaicas como el número (negativo) de años que hace que dejaron de evolucionar. Para saber el orden en que debemos especificar las edades, podemos usar mt_nj\$tip.label.
 
 ```{r}
 fechas <- c(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,8 +112,8 @@ fechas <- c(0, 0, 0, 0, 0, 0, 0, 0, 0,
 fechas <- setNames(fechas, mt_nj$tip.label)
 fechas
 ```
-A continuación se escoge la posición de la raíz que optimiza la regresión entre distancia de raíz a puntas y edades de las puntas (Rambaut et al. 2016).
-Quiere decir, que conociendo el año en que dejan de evolucionar y la distancia que se conoce en cada especie. La regresión utiliza cada raíz posible para obtener lo que se conoce hasta encontrar el más probable.
+
+A continuación se escoge la posición de la raíz que optimiza la regresión entre distancia de raíz a puntas y edades de las puntas (Rambaut et al. 2016). Quiere decir, que conociendo el año en que dejan de evolucionar y la distancia que se conoce en cada especie. La regresión utiliza cada raíz posible para obtener lo que se conoce hasta encontrar el más probable.
 
 ```{r}
 #| fig-width: 10
@@ -139,13 +122,9 @@ mt_nj_rtt <- rtt(mt_nj, tip.dates = fechas, objective = 'rms')
 plot(mt_nj_rtt)
 ```
 
-Ejercicio
--¿Se corresponden bien las distancias evolutivas estimadas con las dataciones? NO, se ve que Denisovanos parecen terminar de evolucionar después que los chimpancés cuando sabemos que es lo contráreo
--¿Qué razones puede haber para que la edad de una secuencia no se corresponda con la cantidad de cambios que ha acumulado?
-Errores dataciones suponiendo más antiguos de lo que son, y algunos de estos tienen errores. También estas secuencias tieen cambios no mutaciones ancestrales sino, son productos de degradación del Dna. O comprobar en tabla apéndice y puede que haya errorres en tabla.
+Ejercicio -¿Se corresponden bien las distancias evolutivas estimadas con las dataciones? NO, se ve que Denisovanos parecen terminar de evolucionar después que los chimpancés cuando sabemos que es lo contráreo -¿Qué razones puede haber para que la edad de una secuencia no se corresponda con la cantidad de cambios que ha acumulado? Errores dataciones suponiendo más antiguos de lo que son, y algunos de estos tienen errores. También estas secuencias tieen cambios no mutaciones ancestrales sino, son productos de degradación del Dna. O comprobar en tabla apéndice y puede que haya errorres en tabla.
 
--¿Qué secuencias crees que se ajustan menos a su supuesta edad? 
-H.s. denisova
+-¿Qué secuencias crees que se ajustan menos a su supuesta edad? H.s. denisova
 
 # Distancias
 
@@ -179,8 +158,7 @@ mean(distMat[modernos, bonobos])
 
 Calcula las distancias medias entre todos los grupos.
 
-¿Cuántas veces mayor es la distancia entre humanos y chimpancés que entre humanos y neandertales? 0,09104153/0,01214282=7,49
-¿Cómo calcularías la distancia media entre dos secuencias de humanos modernos?  0.003747961
+¿Cuántas veces mayor es la distancia entre humanos y chimpancés que entre humanos y neandertales? 0,09104153/0,01214282=7,49 ¿Cómo calcularías la distancia media entre dos secuencias de humanos modernos? 0.003747961
 
 ```{r}
 # La submatriz siguiente contiene ceros en la diagonal. Si queremos excluir
@@ -193,7 +171,8 @@ z <- distMat[modernos, modernos]
 z[z == 0] <- NA
 mean(z, na.rm = TRUE)
 ```
-LO que quoere decir es que hacemos un matriz llamada z de solo modernos en donde la diagonal es 0(cuando el mismo humano se compara con si mismo) a este le ponemos numero no asignado NA y cuando computa  lo quitamos na.remove
+
+LO que quoere decir es que hacemos un matriz llamada z de solo modernos en donde la diagonal es 0(cuando el mismo humano se compara con si mismo) a este le ponemos numero no asignado NA y cuando computa lo quitamos na.remove
 
 Las distancias estimadas no son exactas. Cuanto mayor es la distancia, mayor es el error en la estimación. Además el modelo disponible podia no ser el adecuado. Pero nos ayudan a estimar el tiempo transcurrido desde que dos linajes se separaron, si asumimos el reloj molecular. Por ejemplo, estas distancias sugieren que los humanos modernos divergieron de los neandertales hace una cantidad de tiempo aproximadamente igual al 13.3% del tiempo que nos separa de los chimpancés, que podrían ser más de 850000 años si del chimpancé nos separan 6.5 millones de años.
 
@@ -230,7 +209,7 @@ repetidas <- unique(c(identicas[, 'row'], identicas[, 'col']))
 heatmap(crudas[repetidas, repetidas], cexRow = 0.7, cexCol = 0.7)
 ```
 
-Así pues, las secuencias de Neandertales KX198085, KX198086 y MG025540 (todas ellas con una edad estimada de unos 40000 años) son idénticas entre ellas; y las secuencias, también Neandertales FM865407, KX198082, KX198088 y KX198083 son idénticas entre ellas. Bueno, en realidad, la comparación ignora las posiciones en las que una secuencia contiene ambigüedades (Ns). Dejaremos sólo una de cada grupo: MG025540 y FM865407, que son las que menos ambigüedades tienen en la secuencia. Como no conocemos una función que elimine secuencias de un objeto phyDat, necesitamos especificar aquellas con las que nos queremos quedar. Podríamos usar la función subset() o bien la función [, tal como la aplicaríamos a una matriz. También existe una función unique(), pero si la usamos perdemos control sobre qué representantes conservamos de cada grupo de secuencias idénticas.
+Así pues, las secuencias de Neandertales KX198085, KX198086 y MG025540 (todas ellas con una edad estimada de unos 40000 años) son idénticas entre ellas; y las secuencias, también Neandertales FM865407, KX198082, KX198088 y KX198083 son idénticas entre ellas. Bueno, en realidad, la comparación ignora las posiciones en las que una secuencia contiene ambigüedades (Ns). Dejaremos sólo una de cada grupo: MG025540 y FM865407, que son las que menos ambigüedades tienen en la secuencia. Como no conocemos una función que elimine secuencias de un objeto phyDat, necesitamos especificar aquellas con las que nos queremos quedar. Podríamos usar la función subset() o bien la función \[, tal como la aplicaríamos a una matriz. También existe una función unique(), pero si la usamos perdemos control sobre qué representantes conservamos de cada grupo de secuencias idénticas.
 
 ```{r}
 # La exclamación ("!") invierte el valor lógico de lo que la sigue.
@@ -242,13 +221,13 @@ mtdna37
 ```
 
 ¿Serías capaz de crear otro conjunto de datos, mtdna28, que sólo contenga secuencias del género Homo?
+
 ```{r}
 mtdna28 <- mtdna37[grepl('^H.', names(mtdna37)), ]
 ```
 
-
 Por otra parte, la secuencia del gorila no nos hace falta: es demasiado divergente y puede haber evolucionado a un ritmo diferente.
+
 ```{r}
 mtdna36 <- mtdna37[! startsWith(names(mtdna37), 'G.gorilla'),]
 ```
-
