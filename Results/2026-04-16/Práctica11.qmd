@@ -1,0 +1,147 @@
+---
+title: "Práctica11"
+format: 
+ html:
+   embed-resources: true
+   self-contained: true
+engine: knitr
+---
+
+# Datos
+Vamos a usar lecturas HiFi generadas por Rabanal et al. (2022) de un único individuo de la planta Arabidopsis thaliana, ecotipo Columbia (Col-0), con la tecnología SMRT de PacBio (proyecto PRJEB50694). Los datos seleccionados son solo una parte de los originales y se encuentran en el archivo At4.10.fa.gz (46 Mb), disponible en el aula virtual. También está en el espacio de disco compartido de la Universidad de Valencia, dentro del grupo de bioinformática. Este espacio es directamente accesible desde los ordenadores virtuales.
+
+# Revisión de los datos
+Los datos están en formato FASTA porque contienen sólo lecturas de alta calidad, y hifiasm no utiliza la información de las calidades de cada base. El archivo está comprimido. Antes de empezar el ensamblaje deberíamos tener una idea de la cantidad de datos que tenemos. Si lo necesitas, utiliza una inteligencia artificial para responder las preguntas siguientes y anota en un bloque de código las órdenes utilizadas. Puedes hacerlo con instrucciones de Bash o de R, pero R necesitará cargar en memoria el archivo entero, lo que no sería muy práctico si se tratara de un archivo 10 o 50 veces mayor.
+
+## Ejercicio 1
+¿Cuántas secuencias contiene el archivo?
+13812
+```{bash}
+zgrep -c "^>" ../../data/At4.10.fa.gz
+```
+Grep linea por linea y c es contar 
+
+¿Qué longitudes mínima, media y máxima tienen las secuencias? ¿Cuál es el número total de bases?
+Min: 2942 Max: 59075 Media: 18143.6 Total bases: 250599484
+
+```{bash}
+zcat ../../data/At4.10.fa.gz | awk '/^>/ {next} {len=length($0); total+=len; if(len<min||min==0) min=len; if(len>max) max=len; count++} END {print "Min:", min, "Max:", max, "Media:", total/count, "Total bases:", total}'
+```
+zcat version de comprimidos de cat. | redirige el contenido del archivo a awk. Primero se ponen parametros bases. Luego se ejecuta la parte del if a cada línea. 
+
+Solo para la max, min y media. Aqui dice que si la linea no empieza por mayor pero si no es el caso hay que añadirle lo de antes. Todo se aplica a todas las líneas. Luego una última secuencia se revisa que sea max o min por si acaso.
+```{bash}
+zcat ../../data/At4.10.fa.gz | awk '
+BEGIN {min=1e12; max=0; sum=0; len=0; n=0}
+{
+  if ($0 ~ /^>/) {
+    if (len > 0) {
+      if (len < min) min = len
+      if (len > max) max = len
+      sum += len
+      n++
+    }
+    len = 0
+  } else {
+    len += length($0)
+  }
+}
+END {
+  # última secuencia
+  if (len > 0) {
+    if (len < min) min = len
+    if (len > max) max = len
+    sum += len
+    n++
+  }
+  print "Secuencias:", n
+  print "Longitud mínima:", min
+  print "Longitud media:", sum/n
+  print "Longitud máxima:", max
+}'
+```
+
+Se recomienda usar el sistema y código que entiendas
+
+Si se estimara que el genoma a ensamblar fuera de sólo 19 millones de bases, ¿cuál sería la cobertura esperada?Cobertura esperada: 13.18= 19millones/total bases. Es buena pero su distribucion es dispersa por lo que secuencias secuenciados 20 veses y algunos no más de 2. Por lo que mejor que sea 30 y aún mejor 60. Y además si se quiere diferenciar haplotipo materno y paterno mayor para evitar leer solo uno de los dos cromosomas.
+```{bash}
+TOTAL_BASES=$(zcat ../../data/At4.10.fa.gz | awk '/^>/ {next} {total+=length($0)} END {print total}')
+COBERTURA=$(echo "scale=2; $TOTAL_BASES / 19000000" | bc)
+echo "Cobertura esperada: $COBERTURA x"
+```
+
+# Ensamblaje
+El programa hifiasm produce varios archivos de salida. Para tener la carpeta de trabajo ordenada, es recomendable crear un subcarpeta donde poder guardarlos. Si fuéramos a probar más de una estrategia de ensamblado, guardaríamos los resultados de cada intento en una carpeta diferente, que podríamos nombrar asm1, asm2, etc. Aunque sólo realicemos un ensamblaje, crearemos la carpeta asm1 para guardar los resultados en el.
+
+```{bash}
+# Con la ejecución condicional nos ahorramos algún mensaje de error:
+if [ ! -d asm1 ]; then mkdir asm1; fi
+```
+
+El ensamblaje de estas lecturas puede durar unos minutos. No queremos tener que ejecutarlo cada vez que compilamos el documento de Quarto. Tenemos dos opciones: o bien usamos la directriz #| cache: true al principio del bloque de código o bien controlamos directamente la ejecución condicional con Bash. Si usamos el método que ofrece Quarto, aparecerá una nueva carpeta que guarda resultados previos y que estaría bien incluir en el repositorio de Git. Yo prefiero usar Bash:
+
+```{bash}
+#| cache: true
+export PATH=$PATH:~/bin/hifiasm
+if [ ! -e asm1/At4.bp.p_ctg.gfa ]; then
+   hifiasm -o asm1/At4 -t 2 -f 0 ../../data/At4.10.fa.gz 2> asm1/hifiasm.log
+fi
+```
+La parte de export es para decirle donde ir a buscar el programa.
+Las opciones significan lo siguiente:
+
+-o asm1/At4: usa el prefijo asm1/At4 para los archivos de salida.
+-t 2: usa dos procesadores. Por defecto usaría uno.
+-f 0: inhabilita el uso de un filtro de Bloom (Melsted and Pritchard 2011) durante la corrección de errores, que ocuparía 16 Gb de memoria.
+../../data/At4.10.fa.gz: archivo con los datos de partida.
+2> asm1/hifiasm.log: guarda los numerosos mensajes que hifiasm envía al error estándar en un archivo asm1/hifiasm.log. Esto evita que esos mensajes se acumulen en el informe HTML.
+
+
+## Ejercicio 2
+Consulta la ayuda de hifiasm (hifiasm -h) y contesta las preguntas siguientes:
+
+¿Los parámetros corresponden al ensamblaje de un genoma haploide o diploide?
+Intuimos que corresponde a un dipolide ya que en los resultados se oberva un resultado hap1 y hap2.
+¿Qué nivel de eliminación de duplicaciones hemos aplicado? (El paso de eliminar duplicaciones sirve para que las zonas de alta heterocigosidad no sean ensambladas como contigs diferentes).
+Purge-dups, el nivel de purga es aggresivo de nivel 3.
+
+Si tuvieramos lecturas ultra-largas, ¿con qué opción o argumento añadiríamos esa información?
+ Ultra-Long-integration: cuyo argumento es ul
+ 
+# Evaluación del resultado
+
+NoteEjercicio 3
+Consulta la descripción de los archivos de salida que encontrarás en este enlace y contesta las preguntas siguientes:
+
+¿Dónde están las secuencias que componen el ensamblaje?
+At4.r_utg.gfa
+En los archivos .gfa, ¿qué son las líneas que empiezan por ‘A’?
+Hifiasm outputs A lines including the information of reads which are used to construct contig/unitig. Indica las lecturas utilizadas para contruir el contigo y están siempre en la primera columna.
+¿Qué información tiene los archivos .bed?
+The coordinates of low quality regions are written to *lowQ.bed in BED format.
+Informacion de lecturas de baja calidad.
+¿Cuál es la cobertura media estimada de las secuencias homocigotas?
+En Hifiasm.log su histograma muestra que las repeticiones más frecuente es 12 y se puede tomar como la cobertura media se parece al 13 esperado bajo suposición que el genoma son 19 millones de bases.
+Después de corrección de errores se observa que el pico en 1 disminuye mucho y puede aumentar los dos. 
+¿Y la de las heterocigotas?
+Debería haber otro pico en 6 pero no lo hay porque es homocigota (planta usada en biotecnología)
+
+
+Los ensamblajes primario y por haplotipos se presentan en formato GFA. Para extraer las secuencias en formato FASTA podemos usar el pequeño script siguiente, en lenguaje AWK, desde el terminal de Bash:
+
+```{bash}
+awk '(/^S/){print ">" $2 "\n" $3}' asm1/At4.bp.p_ctg.gfa > asm1/At4.fa
+```
+
+Esto el ejecutable es Biostrings que permite leer el archivo.fa
+Este bloque es para tener la longitud de los contigs y y longitudes acumuladas como N50.
+library(Biostrings)
+asm1 <- readDNAStringSet('asm1/At4.fa')
+asm1.len <- data.frame(
+  len = sort(width(asm1),
+             decreasing = TRUE)
+)
+asm1.len$cumlen <- cumsum(asm1.len$len)
+asm1.len$cumprop <- asm1.len$cumlen / 
+                    sum(asm1.len$len)
+asm1.len

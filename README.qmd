@@ -1,10 +1,11 @@
 2026-01-29 es para la primera práctica pero no se hizo el alineamiento, tengo que hacerlo
 2026-02-02 la 2ª práctica de git
-2026-10-02 control calidad secuenciación por ilumina y falta el mapeo
-2026-16-02 Procesamiento de datos en R, he llegado a hacer las tablas y seleccionar un genoma en base a esta sy gráficas.
-2026-24-02 Uso de R para programar busquedas en ENA y análisis de estas tablas.
+2026-02-10 control calidad secuenciación por ilumina y falta el mapeo
+2026-02-16 Procesamiento de datos en R, he llegado a hacer las tablas y seleccionar un genoma en base a esta sy gráficas.
+2026-02-24 Uso de R para programar busquedas en ENA y análisis de estas tablas.
 2026-03-03 práctica de listas a partir de base de datos y búsquedas
-2026-09-03 prácticas de hacer representaciones de gráficas a partir de datos.
-2026-25-03 práctica de blast y sus comandos
-2026-26-03 práctica de alinamiento y foilogenia de árboles
-2026-31-03 segunda parte de arboles filogenéticos
+2026-03-09 prácticas de hacer representaciones de gráficas a partir de datos.
+2026-03-25 práctica de blast y sus comandos
+2026-03-26 práctica de alinamiento y foilogenia de árboles
+2026-03-31 segunda parte de arboles filogenéticos
+2026-04-16 Ensamblaje de secuencias
