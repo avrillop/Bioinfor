@@ -9,3 +9,4 @@
 2026-03-26 práctica de alinamiento y foilogenia de árboles
 2026-03-31 segunda parte de arboles filogenéticos
 2026-04-16 Ensamblaje de secuencias
+2026-04-21 Anotación del genoma a partir del ensamblaje de 2026-04-16
