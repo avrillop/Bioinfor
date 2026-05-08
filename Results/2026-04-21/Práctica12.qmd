@@ -96,7 +96,7 @@ galba.pl --species="Arabidopsis thaliana" \
          --genome=At4.soft.fa \
          --prot_seq=proteinas.fasta
 ```
-
+no se ejecutan porque no tengo estos programas instalados
 ## Ejercicio 5
 
 Échales un vistazo a los archivos de salida de GALBA y trata de sacar algo en claro. Galba usa miniprot y las evidencias proporcionado y las mapea frente ensamblaje anterior. Uso de Augustus que identifique bien los genes. Con varias rondas refina.
