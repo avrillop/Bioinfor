@@ -47,7 +47,7 @@ apt install emboss exonerate wget muscle
 | rm -r a   | Eliminar el *directorio* "a" y su contenido |
 | touch a   | Crear el archivo vacío "a" o actualizar su fecha de consulta si ya existía |
 | plot | crea tabla en donde si das solo un dato será y y las x será indice de los valores.|
-|nano | apertura de archivo txt
+|nano a.txt | apertura de archivo a.txt
 ::: {.callout-tip title="Consejo"}
 Amplía la tabla modificando el documento fuente.
 :::
